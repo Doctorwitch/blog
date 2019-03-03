@@ -136,15 +136,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
-TINYMCE_DEFAULT_CONFIG = {
-    'mood': 'textareas',
-    'theme': 'advanced',
-    'width': 800,
-    'height': 600,
-}
 
 # 发送邮件配置
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # smpt服务地址
 EMAIL_HOST = 'smtp.qq.com'
@@ -156,3 +149,18 @@ EMAIL_HOST_PASSWORD = 'wyivwoaaawcsbehh'
 EMAIL_USE_TLS = True
 # 收件人看到的发件人
 EMAIL_FROM = '北方博客<1013100541@qq.com>'
+
+# django缓存配置
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/3",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+# 配置session存储
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"

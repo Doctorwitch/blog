@@ -107,11 +107,6 @@ class Login(View):
             return render(request, 'base_login.html', {'errmsg': '用户名或密码错误，请检查输入是否正确或点击立即注册，注册新用户'})
 
 
-
-
-
-
-
 class Index(View):
     def get(self, request):
         '''首页'''
