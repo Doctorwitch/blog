@@ -53,7 +53,11 @@
                             <ul class="dropDown-menu menu radius box-shadow">
                                 <li><a href="/app/loginOut">退出</a></li>
                             </ul>-->
-                            <span>欢迎您！</span><a href="/login">&nbsp请登录&nbsp</a>|<a href="/register">&nbsp注册</a>
+                        {% if user.is_authenticated %}
+                            <span>欢迎您！</span><a href="">{{ user.username }}&nbsp&nbsp</a>|<a href="{% url 'user:logout' %}">&nbsp&nbsp退出</a>
+                        {% else %}
+                            <span>欢迎您！</span><a href="{% url 'user:login' %}">&nbsp请登录&nbsp</a>|<a href="{% url 'user:register' %}">&nbsp注册</a>
+                        {% endif %}
                     </li>
                 </ul>
             </nav>

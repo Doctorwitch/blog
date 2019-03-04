@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from celery_tasks.tasks import send_register_active_email
 from user.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired
 from django.conf import settings
@@ -76,7 +76,7 @@ class Active(View):
             user.is_active = 1
             user.save()
             # 返回应答,跳转到登录页面
-            return render(request, 'base_login.html', {'user': user})
+            return redirect(reverse('user:login'))
 
         except SignatureExpired as e:
             return render(request, 'base_register.html', {'errmsg': '激活链接已过期，请重新获取'})
@@ -99,12 +99,22 @@ class Login(View):
             if user.is_active:
                 # 用户已激活
                 login(request, user)
-                return redirect(reverse('user:index'))
+                next_url = request.GET.get('next', reverse('user:index'))
+                return redirect(next_url)
             else:
                 # 用户未激活
                 return render(request, 'base_login.html', {'errmsg': '用户未激活，请检查注册邮箱并点击激活链接激活账户'})
         else:
             return render(request, 'base_login.html', {'errmsg': '用户名或密码错误，请检查输入是否正确或点击立即注册，注册新用户'})
+
+
+class Logout(View):
+    def get(self, request):
+        '''退出登录'''
+        # 清除用户的session信息
+        logout(request)
+        # 跳转到首页
+        return redirect(reverse('user:index'))
 
 
 class Index(View):
